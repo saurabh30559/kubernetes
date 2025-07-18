@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springapp
+  namespace: test-ns
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: springapp
+  template:
+    metadata:
+      labels:
+        app: springapp
+    spec:
+      containers:
+        - name: springapp
+          image: balajidockerhandson/spring-boot-app:1
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "150m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MONGO_DB_HOSTNAME
+              value: mongodbsvc
+            - name: MONGO_DB_USERNAME
+              value: devdb
+            - name: MONGO_DB_PASSWORD
+              value: devdb@123
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: springappsvc
+  namespace: test-ns
+spec:
+  selector:
+    app: springapp
+  ports:
+    - port: 80
+      targetPort: 8080
+  type: NodePort
+
