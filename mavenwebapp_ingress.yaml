@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mavenwebapp-ingress
+  namespace: test-ns
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: "a35b553af056c4b0388909dee88888b1-888614a96a1b4073.elb.ap-south-1.amazonaws.com"
+    http:
+      paths:
+      - path: /maven-web-application/
+        pathType: Prefix
+        backend:
+          service:
+            name: mavenwebappsvc
+            port:
+              number: 80
+      - path: /java-web-app/
+        pathType: Prefix
+        backend:
+          service:
+            name: javawebappsvc
+            port:
+              number: 80

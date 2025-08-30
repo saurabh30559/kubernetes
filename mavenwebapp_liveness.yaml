@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mavenwebapp
+  namespace: test-ns
+spec:
+  replicas: 2
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: mavenwebapp
+  template:
+    metadata:
+      labels:
+        app: mavenwebapp
+    spec:
+      containers:
+      - name: mavenwebapp
+        image: balajidockerhandson/maven-web-application:1
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: "300m"
+            memory: "256Mi"
+          limits:
+            cpu: "512m"
+            memory: "600Mi"
+        livenessProbe:
+          httpGet:
+            path: /maven-web-application/
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /maven-web-application/
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mavenwebappsvc
+  namespace: test-ns
+spec:
+  type: ClusterIP
+  selector:
+    app: mavenwebapp
+  ports:
+  - port: 80
+    targetPort: 8080
+#    nodePort: 30009
+

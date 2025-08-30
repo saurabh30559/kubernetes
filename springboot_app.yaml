@@ -4,7 +4,7 @@ metadata:
   name: springapp
   namespace: test-ns
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: springapp
@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: springapp
-          image: balajidockerhandson/spring-boot-app:1
+          image: balajidockerhandson/spring-boot-app:2
           resources:
             requests:
               memory: "128Mi"
@@ -44,5 +44,5 @@ spec:
   ports:
     - port: 80
       targetPort: 8080
-  type: NodePort
+  type: ClusterIP
 
